@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">StreetFighter</string>
+    <string name="time">Time:</string>
+    <string name="enter_your_name">Enter your Name</string>
+    <string name="welcome">Welcome</string>
+    <string name="enter_your_age">Enter your Age</string>
+    <string name="ok">OK</string>
+    <string name="hello">Hello</string>
+    <string name="choose_difficult_level">Choose a difficult level:</string>
+    <string name="easy">EASY</string>
+    <string name="medium">MEDIUM</string>
+    <string name="hard">HARD</string>
 </resources>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#67ac15"
     tools:context="com.example.win10.streetfighter.MainActivity">
 
     <TextView
@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="49dp"
-        android:text="Welcome"
+        android:text="@string/welcome"
         android:textColor="@android:color/black"
         android:textSize="30sp" />
 
@@ -25,7 +25,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="44dp"
         android:ems="10"
-        android:hint="Enter your Name"
+        android:hint="@string/enter_your_name"
         android:inputType="textPersonName" />
 
     <EditText
@@ -36,7 +36,7 @@
         android:layout_alignStart="@+id/nameEditText"
         android:layout_centerVertical="true"
         android:ems="10"
-        android:hint="Enter your Age"
+        android:hint="@string/enter_your_age"
         android:inputType="textPersonName" />
 
     <Button
@@ -46,7 +46,8 @@
         android:layout_below="@+id/ageEditText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="83dp"
-        android:text="OK"
-        android:onClick="onClick" />
+        android:background="#ff9933"
+        android:onClick="onClick"
+        android:text="@string/ok" />
 
 </RelativeLayout>
