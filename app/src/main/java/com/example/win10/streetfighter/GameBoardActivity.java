@@ -2,17 +2,21 @@ package com.example.win10.streetfighter;
 
 
 import android.content.pm.ActivityInfo;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Collections;
 import java.util.Vector;
+
+import tyrantgit.explosionfield.ExplosionField;
 
 public class GameBoardActivity extends AppCompatActivity {
 
@@ -28,12 +32,19 @@ public class GameBoardActivity extends AppCompatActivity {
     private Vector<Card> cardVec = new Vector<>();
     private static Handler handler = new Handler();
     private CountDownTimer countDownTimer;
+    private ImageView shoryukenImageView;
+    private GridLayout gameGrid;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_game_board);
+
+
+        shoryukenImageView = (ImageView) findViewById(R.id.ryuImageView);
+        shoryukenImageView.setVisibility(View.GONE);
 
         //get all the details from the intent, and start the countdown timer
         Bundle userData = getIntent().getExtras();
@@ -53,10 +64,17 @@ public class GameBoardActivity extends AppCompatActivity {
             }
 
             public void onFinish() {
+                ExplosionField explosionField = explosionField = ExplosionField.attach2Window(GameBoardActivity.this);
+
+                explosionField.explode(gameGrid);
+
                 Toast.makeText(GameBoardActivity.this, "GAME OVER", Toast.LENGTH_SHORT).show();
                 enableCards(false);
+
+
                 handler.postDelayed(new Runnable() {
                     public void run() {
+
                         finish();
                     }
                 }, DELAYMILLIS);
@@ -67,9 +85,9 @@ public class GameBoardActivity extends AppCompatActivity {
         int col = userData.getInt("col");
 
         //start the matrix of cards, and shuffle the cards, each card will have a listener
-        GridLayout gridLayout = findViewById(R.id.gameBoardGrid);
-        gridLayout.setColumnCount(row);
-        gridLayout.setRowCount(col);
+        gameGrid = findViewById(R.id.gameBoardGrid);
+        gameGrid.setColumnCount(row);
+        gameGrid.setRowCount(col);
 
         Vector<Integer> picVec = new Vector<>();
 
@@ -80,7 +98,7 @@ public class GameBoardActivity extends AppCompatActivity {
         for (int i = 0; i < picVec.size(); i++) {
             Card bt = new Card(this, picVec.get(i));
             cardVec.add(i, bt);
-            gridLayout.addView(cardVec.get(i));
+            gameGrid.addView(cardVec.get(i));
             cardVec.get(i).setOnClickListener(new MyOnClickListener(cardVec.get(i)));
 
         }
@@ -157,6 +175,7 @@ public class GameBoardActivity extends AppCompatActivity {
             countDownTimer.cancel();
             Toast.makeText(GameBoardActivity.this, "YOU WIN!", Toast.LENGTH_SHORT).show();
             enableCards(false);
+            animationStart();
             handler.postDelayed(new Runnable() {
                 public void run() {
                     finish();
@@ -164,6 +183,14 @@ public class GameBoardActivity extends AppCompatActivity {
             }, DELAYMILLIS);
         }
     }
+
+    private void animationStart() {
+        shoryukenImageView.setVisibility(View.VISIBLE);
+        shoryukenImageView.setImageResource(R.drawable.shoryuken);
+        AnimationDrawable animationDrawable = (AnimationDrawable) shoryukenImageView.getDrawable();
+        animationDrawable.start();
+    }
+
 
     //lock or not lock the cards
     private void enableCards(boolean enable) {

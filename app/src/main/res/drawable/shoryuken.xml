@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="true">
+
+    <item android:drawable="@drawable/ryu0"
+        android:duration="100"/>
+    <item android:drawable="@drawable/ryu1"
+        android:duration="100"/>
+    <item android:drawable="@drawable/ryu2"
+        android:duration="100"/>
+    <item android:drawable="@drawable/ryu3"
+        android:duration="100"/>
+    <item android:drawable="@drawable/ryu4"
+        android:duration="100"/>
+    <item android:drawable="@drawable/ryu5"
+        android:duration="100"/>
+    <item android:drawable="@drawable/ryu6"
+        android:duration="100"/>
+    <item android:drawable="@drawable/ryu7"
+        android:duration="100"/>
+    <item android:drawable="@drawable/ryu8"
+        android:duration="100"/>
+    <item android:drawable="@drawable/ryu9"
+        android:duration="100"/>
+    <item android:drawable="@drawable/ryu10"
+        android:duration="100"/>
+    <item android:drawable="@drawable/ryu11"
+        android:duration="100"/>
+    <item android:drawable="@drawable/ryu12"
+        android:duration="100"/>
+    <item android:drawable="@drawable/ryu13"
+        android:duration="100"/>
+    <item android:drawable="@drawable/ryu14"
+        android:duration="100"/>
+    <item android:drawable="@drawable/ryu15"
+        android:duration="100"/>
+    <item android:drawable="@drawable/ryu16"
+        android:duration="100"/>
+
+</animation-list>
