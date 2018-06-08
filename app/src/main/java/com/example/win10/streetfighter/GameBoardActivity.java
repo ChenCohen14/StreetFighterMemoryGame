@@ -1,10 +1,15 @@
 package com.example.win10.streetfighter;
 
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,7 +23,7 @@ import java.util.Vector;
 
 import tyrantgit.explosionfield.ExplosionField;
 
-public class GameBoardActivity extends AppCompatActivity {
+public class GameBoardActivity extends AppCompatActivity implements SensorService.SensorServiceListener {
 
     private final static int DELAYMILLIS = 2000;
     private static int counter = 0;
@@ -34,6 +39,26 @@ public class GameBoardActivity extends AppCompatActivity {
     private CountDownTimer countDownTimer;
     private ImageView shoryukenImageView;
     private GridLayout gameGrid;
+    private float[] startValues;
+    private static final int DELTA=7;
+    private static boolean gameIsOver;
+
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            if (iBinder instanceof SensorService.SensorServiceBinder) {
+                SensorService.SensorServiceBinder sensorServiceBinder = (SensorService.SensorServiceBinder) iBinder;
+                sensorServiceBinder.setListener(GameBoardActivity.this);
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            unbindService(serviceConnection);
+
+        }
+    };
 
 
     @Override
@@ -42,6 +67,9 @@ public class GameBoardActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_game_board);
 
+        bindService(new Intent(this ,SensorService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+
+        gameIsOver = false;
 
         shoryukenImageView = (ImageView) findViewById(R.id.ryuImageView);
         shoryukenImageView.setVisibility(View.GONE);
@@ -102,6 +130,63 @@ public class GameBoardActivity extends AppCompatActivity {
             cardVec.get(i).setOnClickListener(new MyOnClickListener(cardVec.get(i)));
 
         }
+
+    }
+
+    @Override
+    public void onSensorChanged(float[] values) {
+        if(startValues==null) {
+            startValues= new float[3];
+            startValues[0] = values[0];
+            startValues[1] = values[1];
+            startValues[2] = values[2];
+        }
+        if(gameIsOver)
+            return;
+
+        float x=Math.abs(values[0]);
+        float y=Math.abs(values[1]);
+        float z=Math.abs(values[2]);
+        float sx=Math.abs(startValues[0]);
+        float sy=Math.abs(startValues[1]);
+        float sz=Math.abs(startValues[2]);
+
+        if(x > sx + DELTA || y > sy + DELTA || z > sz + DELTA)
+        {
+           addCardsToGame();
+
+        }
+    }
+
+    private void addCardsToGame(){
+        boolean cardsAdded = false;
+        Card card = null;
+        int counter = 0;
+        for(int i = 0; i < cardVec.size() && counter < 2; i++) {
+            if(cardVec.get(i).getIsMatch() && counter == 0){
+                card = cardVec.get(i);
+                card.setEnabled(true);
+                card.setClickable(true);
+                card.setIsMatch(false);
+                card.flip();
+                counter++;
+                cardsAdded = true;
+            }
+            else if(counter > 0 && cardVec.get(i).getIsMatch()){
+                if(cardVec.get(i).equals(card)){
+                    cardVec.get(i).setIsMatch(false);
+                    cardVec.get(i).flip();
+                    cardVec.get(i).setEnabled(true);
+                    cardVec.get(i).setClickable(true);
+                    counter++;
+                }
+
+            }
+
+        }
+        if(cardsAdded)
+            Toast.makeText(this, "punished! you moved your phone", Toast.LENGTH_SHORT).show();
+
 
     }
 
@@ -172,6 +257,7 @@ public class GameBoardActivity extends AppCompatActivity {
                 if (!cardVec.get(i).getIsMatch())
                     return;
             }
+            gameIsOver = true;
             countDownTimer.cancel();
             Toast.makeText(GameBoardActivity.this, "YOU WIN!", Toast.LENGTH_SHORT).show();
             enableCards(false);
@@ -210,6 +296,14 @@ public class GameBoardActivity extends AppCompatActivity {
         countDownTimer.cancel();
         finish();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(serviceConnection);
+        countDownTimer.cancel();
+    }
+
 }
 
 

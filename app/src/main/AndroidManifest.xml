@@ -19,6 +19,10 @@
         </activity>
         <activity android:name=".Screen2Activity" />
         <activity android:name=".GameBoardActivity"></activity>
+        <service
+            android:name=".SensorService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
