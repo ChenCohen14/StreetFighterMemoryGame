@@ -6,8 +6,16 @@
     <string name="enter_your_age">Enter your Age</string>
     <string name="ok">OK</string>
     <string name="hello">Hello</string>
-    <string name="choose_difficult_level">Choose a difficult level:</string>
+    <string name="choose_difficulty_level">Choose a difficulty level:</string>
     <string name="easy">EASY</string>
     <string name="medium">MEDIUM</string>
     <string name="hard">HARD</string>
+    <string name="title_activity_high_score">highScore</string>
+    <string name="top_ten">Top 10 Scores</string>
+
+
+    <string name="Records">Records</string>
+    <string name="title_activity_score_maps">Map</string>
+    <string name="player_score">Player Score</string>
+
 </resources>

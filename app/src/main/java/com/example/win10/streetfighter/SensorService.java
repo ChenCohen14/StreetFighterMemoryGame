@@ -46,7 +46,6 @@ public class SensorService extends Service implements SensorEventListener {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        // free redundant resources
         setSensorServiceListener(null);
         sensorManager.unregisterListener(this);
 

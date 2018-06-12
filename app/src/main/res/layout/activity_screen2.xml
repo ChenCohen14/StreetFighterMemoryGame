@@ -32,13 +32,13 @@
         android:textSize="30sp" />
 
     <TextView
-        android:id="@+id/difficultLevelTextView"
+        android:id="@+id/difficultyLevelTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/helloTextView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="59dp"
-        android:text="@string/choose_difficult_level"
+        android:text="@string/choose_difficulty_level"
         android:textColor="@android:color/background_dark"
         android:textSize="30sp" />
 
@@ -46,7 +46,7 @@
         android:id="@+id/easyButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/difficultLevelTextView"
+        android:layout_below="@+id/difficultyLevelTextView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="65dp"
         android:background="#ff9933"
@@ -73,6 +73,17 @@
         android:layout_marginTop="21dp"
         android:background="#ff9933"
         android:text="@string/hard" />
+    <Button
+        android:id="@+id/recordButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/mediumButton"
+        android:layout_alignStart="@+id/mediumButton"
+        android:layout_below="@+id/hardButton"
+        android:layout_marginTop="21dp"
+        android:background="#ff9933"
+        android:text="@string/Records" />
+
 
 
 </RelativeLayout>

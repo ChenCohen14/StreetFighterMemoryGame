@@ -1,17 +1,23 @@
 package com.example.win10.streetfighter;
 
 
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.AnimationDrawable;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -42,6 +48,15 @@ public class GameBoardActivity extends AppCompatActivity implements SensorServic
     private float[] startValues;
     private static final int DELTA=7;
     private static boolean gameIsOver;
+    Location lastKnownLocation = null;
+    long timeLeft;
+    private String name;
+    private int row;
+    private int col;
+    private DBAssistant DBAssistant;
+    final String TAG = "GameBoardActivity";
+
+
 
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -69,6 +84,8 @@ public class GameBoardActivity extends AppCompatActivity implements SensorServic
 
         bindService(new Intent(this ,SensorService.class), serviceConnection, Context.BIND_AUTO_CREATE);
 
+        DBAssistant = new DBAssistant(this);
+
         gameIsOver = false;
 
         shoryukenImageView = (ImageView) findViewById(R.id.ryuImageView);
@@ -79,7 +96,7 @@ public class GameBoardActivity extends AppCompatActivity implements SensorServic
         if (userData == null)
             return;
 
-        final String name = userData.getString("nameMessage");
+        name = userData.getString("nameMessage");
         TextView nameTextView = findViewById(R.id.gameBoardTextView);
         nameTextView.setText(name);
 
@@ -88,6 +105,7 @@ public class GameBoardActivity extends AppCompatActivity implements SensorServic
         countDownTimer = new CountDownTimer(milliseconds, 1000) {
 
             public void onTick(long millisUntilFinished) {
+                timeLeft = millisUntilFinished;
                 timerTextView.setText(getString(R.string.time) + millisUntilFinished / 1000);
             }
 
@@ -109,8 +127,8 @@ public class GameBoardActivity extends AppCompatActivity implements SensorServic
             }
         }.start();
 
-        int row = userData.getInt("row");
-        int col = userData.getInt("col");
+        row = userData.getInt("row");
+        col = userData.getInt("col");
 
         //start the matrix of cards, and shuffle the cards, each card will have a listener
         gameGrid = findViewById(R.id.gameBoardGrid);
@@ -258,6 +276,11 @@ public class GameBoardActivity extends AppCompatActivity implements SensorServic
                     return;
             }
             gameIsOver = true;
+
+            long points = (timeLeft/100) * (row*col/2);
+            getLocation();
+            DBAssistant.addData(name,points,lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude());
+
             countDownTimer.cancel();
             Toast.makeText(GameBoardActivity.this, "YOU WIN!", Toast.LENGTH_SHORT).show();
             enableCards(false);
@@ -302,6 +325,22 @@ public class GameBoardActivity extends AppCompatActivity implements SensorServic
         super.onDestroy();
         unbindService(serviceConnection);
         countDownTimer.cancel();
+    }
+
+
+    private void getLocation() {
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        String locationProvider = LocationManager.GPS_PROVIDER;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG,"No GPS - Turn on");
+        }try{
+            lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+            lastKnownLocation.getLongitude();
+        }catch (Exception e){
+            lastKnownLocation = new Location("default location");
+            lastKnownLocation.setLatitude(32.113819);
+            lastKnownLocation.setLongitude(34.817794);
+        }
     }
 
 }

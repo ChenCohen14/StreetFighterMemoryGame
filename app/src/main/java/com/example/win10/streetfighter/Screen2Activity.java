@@ -38,6 +38,8 @@ public class Screen2Activity extends AppCompatActivity {
         Button btEasy = findViewById(R.id.easyButton);
         Button btMedium = findViewById(R.id.mediumButton);
         Button btHard = findViewById(R.id.hardButton);
+        Button btRecord = findViewById(R.id.recordButton);
+
 
         btEasy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +76,17 @@ public class Screen2Activity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        btRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Screen2Activity.this,HighScores.class);
+                startActivity(intent);
+
+
+            }
+        });
+
 
 
     }
